@@ -1,39 +1,59 @@
 import * as React from 'react';
 
 export interface IuseFetchProps {
-    loading: Boolean
     error: Boolean
     data: any
+    next: string,
 }
 
-export function useFetch(url: string) {
+declare type Fn = () => any
+
+export function useFetch(url: string){
     
     const [data, setData] = React.useState<any>()
-    const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState(false)
+    const [next, setNext] = React.useState<string>('')
 
     const fetchApi = () => {
+        console.log(url)
         setError(false)
-        setLoading(true)
         fetch(url)
             .then(response => response.json())
             .then(data => 
-                setData(data)
+                {
+                setData(data.results)
+                setNext(data.info.next)
+                }
             )
             .catch(error => {
                 console.log(error)
                 setError(true)
             })
-        .finally(() => setLoading(false))
+    }
+
+    const loadMore = (next: string):Fn => {
+        setError(false)
+        fetch(next)
+            .then(response => response.json())
+            .then(responseData => {
+                setData([...data, ...responseData.results])
+                setNext(responseData.info.next)
+            })
+            .catch(error => {
+                console.log(error)
+                setError(true)
+            })
+        return () => {}
     }
 
     React.useEffect(() => {
         fetchApi();
-    }, []);
+    }, [url]);
 
     return {
-        loading,
         error,
-        data
-  }
+        data,
+        next,
+        loadMore,
+    }
 }

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+    max-width: 1500px;
     margin: 1rem 1rem;
     position: relative;
     left: 52%;
