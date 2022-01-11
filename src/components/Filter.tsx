@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Select } from "./Select";
 import { FILTERS } from "../consts/filters";
+import { SearchForm } from "./SearchForm";
+import { Container } from "../styles/FilterStyle";
 
 export interface IFilters {
+  search: string;
   gender: string;
-  specie: string;
-  type: string;
   status: string;
 }
 
@@ -23,8 +24,15 @@ export function Filter(props: iFilterProps) {
     setFilters({ ...filters, [name]: value });
   };
 
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    const { value, name } = event.target.search;
+    setFilters({ ...filters, [name]: value });
+  };
+
   return (
-    <div>
+    <Container>
+      <SearchForm onSubmit={onSubmit} onChange={onChange} />
       <Select
         onChange={onChange}
         name={FILTERS.genders.name}
@@ -35,6 +43,6 @@ export function Filter(props: iFilterProps) {
         name={FILTERS.status.name}
         values={FILTERS.status.values}
       />
-    </div>
+    </Container>
   );
 }

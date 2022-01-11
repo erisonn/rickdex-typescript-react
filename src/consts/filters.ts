@@ -1,7 +1,7 @@
 export const FILTERS = {
   genders: {
     name: "gender",
-    values: ["Male", "Female"],
+    values: ["Male", "Female", "Genderless"],
   },
   status: {
     name: "status",

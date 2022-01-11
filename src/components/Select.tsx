@@ -1,3 +1,6 @@
+import { SelectContainer } from "../styles/FilterStyle";
+import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+
 export interface ISelectProps {
   name: string;
   values: string[];
@@ -9,12 +12,15 @@ export function Select(props: ISelectProps) {
 
   return (
     <div>
-      <select name={name} onChange={onChange}>
+      <label>{capitalizeFirstLetter(name)}: </label>
+      <SelectContainer name={name} onChange={onChange}>
         <option value="">All</option>
         {values?.map((value) => (
           <option>{value}</option>
         ))}
-      </select>
+      </SelectContainer>
     </div>
   );
 }
+
+//adicionar keys

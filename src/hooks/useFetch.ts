@@ -7,20 +7,19 @@ export function useFetch(url: string) {
   const [error, setError] = React.useState<boolean>(false);
   const [next, setNext] = React.useState<string>("");
 
-  const fetchApi = () => {
-    console.log(url);
+  const fetchApi = React.useCallback(() => {
     setError(false);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setData(data.results);
-        setNext(data.info.next);
+        setNext(data.info?.next);
       })
       .catch((error) => {
         console.log(error);
         setError(true);
       });
-  };
+  }, [url]);
 
   const loadMore = (next: string): Fn => {
     setError(false);
@@ -28,7 +27,7 @@ export function useFetch(url: string) {
       .then((response) => response.json())
       .then((responseData) => {
         setData([...data, ...responseData.results]);
-        setNext(responseData.info.next);
+        setNext(responseData.info?.next);
       })
       .catch((error) => {
         console.log(error);
@@ -39,7 +38,7 @@ export function useFetch(url: string) {
 
   React.useEffect(() => {
     fetchApi();
-  }, [url]);
+  }, [fetchApi]);
 
   return {
     error,

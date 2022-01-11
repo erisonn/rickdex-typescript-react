@@ -7,18 +7,21 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 function App() {
   const defaultFilters = {
+    search: "",
     gender: "",
-    specie: "",
-    type: "",
     status: "",
   };
 
   const [filters, setFilters] = React.useState<IFilters>(defaultFilters);
-  const filteredUrl = `https://rickandmortyapi.com/api/character/?gender=${filters?.gender}&specie=${filters?.specie}&type=${filters?.type}&status=${filters?.status}`;
+  const filteredUrl = `https://rickandmortyapi.com/api/character/?gender=${filters.gender}&status=${filters.status}&name=${filters.search}`;
 
   const { error, data, next, loadMore } = useFetch(filteredUrl);
 
   const characterData = data as ICharacterCardProps[];
+
+  const loaderMessage = characterData?.length
+    ? "Yay! You have seen it all."
+    : "Oops! Nothing found.";
 
   const handleInfiniteScroll = () => {
     setTimeout(() => {
@@ -30,7 +33,7 @@ function App() {
 
   return (
     <>
-      <Title>Rickdex</Title>
+      <Title>Rick and Morty - Characters</Title>
       <Filter filters={filters} setFilters={setFilters} />
       <InfiniteScroll
         next={() => handleInfiniteScroll()}
@@ -39,7 +42,7 @@ function App() {
         loader={<p>Loading...</p>}
         endMessage={
           <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
+            <b>{loaderMessage}</b>
           </p>
         }
       >
